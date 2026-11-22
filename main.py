@@ -14,6 +14,13 @@ def main() -> None:
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
         f.write(TEXT)
+    # Read it back and hold the entry to the gate: 1-280 code points,
+    # not only white space. Fail loudly instead of shipping a bad file.
+    with open("/output/entry.txt", encoding="utf-8") as f:
+        written = f.read()
+    assert written == TEXT, "entry.txt does not match the intended text"
+    assert 1 <= len(written) <= 280, "entry must be 1-280 code points"
+    assert written.strip(), "entry must not be only white space"
 
 
 if __name__ == "__main__":
